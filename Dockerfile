@@ -1,14 +1,15 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build ٍٍٍِِِ
+FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build
 
-WORKDIR /src 
+WORKDIR /src
 
-COPY *.csproj ./
+COPY Catalog.API/*.csproj ./Catalog.API/
+WORKDIR /src/Catalog.API
 
 RUN dotnet restore
 
-COPY . .
+COPY Catalog.API/. .
 
-RUN dotnet publish -c release -o /app/publish
+RUN dotnet publish -c Release -o /app/publish
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine
 
@@ -20,4 +21,4 @@ COPY --from=build /app/publish .
 
 USER appuser
 
-ENTRYPOINT ["dotnet", "catalog.API.dll"]
+ENTRYPOINT ["dotnet", "Catalog.API.dll"]
